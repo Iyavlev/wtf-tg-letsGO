@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wtf-tg-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wtf-bot
+  template:
+    metadata:
+      labels:
+        app: wtf-bot
+    spec:
+      containers:
+        - name: bot
+          image: ilyazykin/wtf-tg-bot:latest
+          env:
+            - name: BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: wtf-bot-token
+                  key: BOT_TOKEN
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: wtf-bot-token
+type: Opaque
+data:
+  BOT_TOKEN: <base64_значение_токена>  # НЕ нужно, если уже есть
